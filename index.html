@@ -91,7 +91,7 @@ function nu() { return new Date(Date.now() + verschil); }
 
 function toonBron() {
   const el = document.getElementById("tijdbron");
-  el.textContent = gesynct ? "Tijd van de server" : "Tijd van dit toestel";
+  el.textContent = gesynct ? "Lokale tijd" : "Tijd van dit toestel";
   el.classList.toggle("waarschuwing", !gesynct);
 }
 
