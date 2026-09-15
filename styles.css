@@ -1,0 +1,227 @@
+/* Klok- en weerbord voor digital signage, 1920x1080 liggend.
+   Kleuren komen uit de huisstijl (skin-bshetpark.css):
+     color1 = teal   #009886 / #00655a / #004d44 / #55c5b8
+     color2 = limoen #a1d683
+   Alles is in vh gezet en het scherm is 16:9, dus de pagina schaalt mee met
+   elke resolutie met die verhouding. */
+
+:root {
+  --merk-diep: #004d44;
+  --merk-paneel: #00655a;
+  --merk-teal: #009886;
+  --lijn: rgba(220, 248, 244, 0.18);
+  --tekst: #ffffff;
+  --gedempt: #9ecfc7;
+  --accent: #a1d683;
+  --accent-zacht: #55c5b8;
+  --waarschuwing: #edb75a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: none;
+  background: var(--merk-diep);
+  color: var(--tekst);
+  font-family: "General Sans", "GeneralSans", Arial, Helvetica,
+               "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#scherm {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 12vh 1fr 6vh;
+  padding: 0 4vh;
+  will-change: transform;
+}
+
+/* ---- kop ---- */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5vh;
+  border-bottom: 0.3vh solid var(--merk-teal);
+}
+/* Het logo draagt de schoolnaam al, dus die staat niet nog eens als tekst.
+   Het staat in zijn eigen kleuren op een wit vlak: zo blijft het merk precies
+   zoals het hoort, en hoeft er niets hertekend te worden voor een donkere
+   achtergrond.
+
+   Wil je het toch zonder vlak, haal dan .logomerk weg en zet op .logo:
+     wit          --logo-vorm:#fff;     --logo-oogwit:#fff;     --logo-tekst:#fff;
+     limoen       --logo-vorm:#a1d683;  --logo-oogwit:#a1d683;  --logo-tekst:#a1d683;
+     boog limoen  --logo-vorm:#a1d683;  --logo-oogwit:#a1d683;  --logo-tekst:#fff;
+   met --logo-pupil gelijk aan de achtergrondkleur. */
+header .logomerk {
+  flex: none;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 1.2vh;
+  padding: 1.2vh 1.8vh;
+}
+header .logo {
+  height: 7vh;
+  width: auto;
+  display: block;
+  --logo-vorm: #009886;
+  --logo-oogwit: #f4f8f4;
+  --logo-pupil: #1d1d1b;
+}
+header .titel {
+  font-size: 4.2vh;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin-right: auto;
+}
+header .vandaag {
+  font-size: 3vh;
+  color: var(--gedempt);
+  white-space: nowrap;
+}
+
+/* De klok is het hoofdonderwerp van dit bord en krijgt dus de ruimte; het
+   weerbericht staat er in een smallere kolom naast. */
+main {
+  display: grid;
+  grid-template-columns: 54% minmax(0, 1fr);
+  gap: 5vh;
+  padding: 4vh 0;
+  min-height: 0;
+}
+
+/* ---- klok ---- */
+#klokpaneel {
+  background: var(--merk-paneel);
+  border-left: 1vh solid var(--accent);
+  padding: 3vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+#klok {
+  width: auto;
+  height: 53vh;
+  max-width: 100%;
+  display: block;
+}
+#klok .rand { fill: none; stroke: var(--merk-teal); stroke-width: 2.5; }
+#klok .uurstreep { stroke: var(--tekst); stroke-width: 2.4; stroke-linecap: round; }
+#klok .minuutstreep { stroke: var(--gedempt); stroke-width: 1; opacity: 0.55; }
+#klok .cijfer {
+  fill: var(--tekst);
+  font-size: 13px;
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+#klok .uur { stroke: var(--tekst); stroke-width: 6; stroke-linecap: round; }
+#klok .minuut { stroke: var(--tekst); stroke-width: 3.6; stroke-linecap: round; }
+#klok .seconde { stroke: var(--accent); stroke-width: 1.4; stroke-linecap: round; }
+#klok .spil { fill: var(--accent); }
+
+.digitaal {
+  font-size: 8vh;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  margin-top: 1.5vh;
+  line-height: 1;
+}
+.tijdbron { font-size: 1.9vh; color: var(--gedempt); margin-top: 0.8vh; }
+.tijdbron.waarschuwing { color: var(--waarschuwing); }
+
+/* ---- weer ---- */
+#weer {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 3vh;
+  min-width: 0;
+}
+
+#nu {
+  display: flex;
+  align-items: center;
+  gap: 3vh;
+  padding-bottom: 2.5vh;
+  border-bottom: 0.2vh solid var(--lijn);
+  min-width: 0;
+}
+#nu.nu-laden { display: block; font-size: 3vh; color: var(--gedempt); }
+.nugetal { min-width: 0; }
+.temp {
+  font-size: 8.5vh;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.omschrijving { font-size: 3.2vh; font-weight: 500; margin-top: 0.5vh; }
+.bijzaken { font-size: 2.1vh; color: var(--gedempt); margin-top: 0.9vh; }
+
+/* Eén raster voor alle dagen samen: de dagnaamkolom is zo breed als de
+   langste naam, dus pictogram en temperatuur staan altijd op dezelfde lijn
+   en kan er niets over elkaar vallen. */
+#dagen {
+  display: grid;
+  grid-template-columns: max-content 9vh minmax(0, 1fr) max-content;
+  align-content: start;
+  min-height: 0;
+}
+#dagen article { display: contents; }
+/* Geen column-gap maar padding, anders valt de scheidingslijn tussen de
+   kolommen in stukken uiteen. */
+#dagen article > * {
+  padding: 1.4vh 2.5vh 1.4vh 0;
+  border-bottom: 0.2vh solid var(--lijn);
+  display: flex;
+  align-items: center;
+}
+#dagen .dagnaam {
+  font-size: 2.8vh;
+  font-weight: 600;
+  color: var(--accent-zacht);
+  white-space: nowrap;
+}
+#dagen .dagicoon { justify-content: center; }
+#dagen .dagtemp { gap: 1.2vh; font-variant-numeric: tabular-nums; }
+#dagen .max { font-size: 3.6vh; font-weight: 600; }
+#dagen .min { font-size: 2.6vh; color: var(--gedempt); }
+#dagen .regen {
+  font-size: 2.4vh;
+  color: var(--accent-zacht);
+  justify-content: flex-end;
+  padding-right: 0;
+}
+
+/* ---- weerpictogrammen ---- */
+.pictogram { display: block; }
+.pictogram.groot { width: 14vh; height: 14vh; flex: none; }
+.pictogram.klein { width: 7.5vh; height: 7.5vh; }
+.i-zon { fill: var(--accent); }
+.i-straal { stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round; }
+.i-wolk { fill: #d8e8ea; }
+.i-lijn { stroke: var(--gedempt); stroke-width: 3; stroke-linecap: round; }
+.i-druppel { stroke: var(--accent-zacht); stroke-width: 3.4; stroke-linecap: round; }
+.i-vlok { fill: #ffffff; }
+.i-bliksem { fill: var(--waarschuwing); }
+
+/* ---- voet ---- */
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4vh;
+  font-size: 2.4vh;
+  color: var(--gedempt);
+  border-top: 0.2vh solid var(--lijn);
+}
+footer .dim { font-size: 1.9vh; color: var(--lijn); }

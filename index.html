@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>Klok en weer — Basisschool Het Park</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link rel="stylesheet"
+      href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="scherm">
+  <header>
+    <span class="logomerk"><svg class="logo" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 727.6 611.3">
+  <g>
+    <path fill="var(--logo-vorm, #009886)" d="M322.6,136.9C322.6,62.5,278.8,0,188,0H.9l-.9,11.8c1.9,178.5,147.1,322.7,326.1,322.7S650.4,190.3,652.3,11.8l-1.2-11.8h-193.7c-90.7,0-134.6,62.5-134.6,136.9"/>
+    <g>
+      <g>
+        <circle fill="var(--logo-oogwit, #f4f8f4)" cx="221.7" cy="100" r="43.5" transform="translate(87.5 302.8) rotate(-80.8)"/>
+        <circle fill="var(--logo-pupil, #1d1d1b)" cx="222.1" cy="101" r="22.3"/>
+      </g>
+      <g>
+        <circle fill="var(--logo-oogwit, #f4f8f4)" cx="427.8" cy="100" r="43.5"/>
+        <circle fill="var(--logo-pupil, #1d1d1b)" cx="428.2" cy="101" r="22.3"/>
+      </g>
+    </g>
+  </g>
+  <path fill="var(--logo-tekst, var(--logo-vorm, #009886))" d="M590.9,611.3v-42.6l28.4,42.6h30.3l-34.2-50.1,33.3-44.3h-28.3l-29.5,39.7v-39.7h-24.9v94.4h24.9ZM498.8,537.4h12.8c11.1,0,16.2,3.5,16.2,11.1s-5.1,10.9-16.2,10.9h-12.8v-22ZM498.8,611.3v-31.4h8.2l19.3,31.4h29.6l-23.2-35.4c12.8-5.4,20-15.4,20-27.5,0-20.1-14.6-31.6-40.1-31.6h-38.7v94.4h24.9ZM416.8,544.2l9.9,30h-20l10.1-30ZM438.9,611.3h26.8l-34.6-94.4h-27.2l-35,94.4h25.1l5.9-17.5h33.2l5.8,17.5h0ZM333.5,537.8c9.9,0,15,4.2,15,11.6s-5.1,12.2-15,12.2h-11.8v-23.8h11.8ZM333.7,582.5c24.7,0,39.6-12.1,39.6-33.4s-14.9-32.2-39.6-32.2h-36.8v94.4h24.9v-28.8h12-.1ZM229,611.3v-71.9h28.9v-22.5h-82.7v22.5h28.9v71.9h24.9ZM169,589.7h-41.9v-16.2h37.2v-21.6h-37.2v-13.5h41v-21.6h-65.9v94.4h66.8v-21.6h0ZM24.9,611.3v-37.7h34.8v37.7h24.9v-94.4h-24.9v35.1H24.9v-35.1H0v94.4h24.9Z"/>
+  <path fill="var(--logo-tekst, var(--logo-vorm, #009886))" d="M727.6,393.5h-22.7v94.4h22.7v-94.4ZM660.5,469.1c-7,0-13.5-5.5-13.5-16.6s6.6-16.4,13.5-16.4,13.5,5.4,13.5,16.4-6.6,16.6-13.5,16.6M660.5,489.2c20.9,0,37-16.4,37-36.7s-16.1-36.7-37-36.7-37,16.4-37,36.7,16.1,36.7,37,36.7M583.7,469.1c-7,0-13.5-5.5-13.5-16.6s6.6-16.4,13.5-16.4,13.5,5.4,13.5,16.4-6.6,16.6-13.5,16.6M583.7,489.2c20.9,0,37-16.4,37-36.7s-16-36.7-37-36.7-37,16.4-37,36.7,16,36.7,37,36.7M497,450.7c0-10.6,5-14.6,10.5-14.6s10,4.9,10,13.8v38h22.5v-45.5c0-17.2-9.9-26.6-23.8-26.6s-14.1,3.4-19.2,8.9v-31.3h-22.5v94.4h22.5v-37.2h0ZM431.1,489.2c20.1,0,33.9-12.6,35.9-32.9h-23.9c-.5,8-4.9,12.8-11.8,12.8s-12.5-5.9-12.5-16.6,4.6-16.4,12.5-16.4,11.4,4.9,11.8,12.6h23.9c-2-19.7-16.4-32.9-35.9-32.9s-35.6,15.6-35.6,36.7,14.6,36.7,35.6,36.7M391.7,463.8c0-10.1-7.2-16.8-20.9-19.3l-15-2.8c-4.5-.8-6.7-1.7-6.7-4.7s3.4-4.6,8.7-4.6,10.5,3.4,11.1,9.1h21.6c-1.3-15.8-14.2-25.6-32.7-25.6s-30.1,9.6-30.1,23.3,7.9,18.5,20.3,20.8l13.9,2.5c4.9.9,7.2,2.2,7.2,5.4s-4.6,4.9-9.7,4.9c-7.8,0-13.2-3.8-13.2-9.7h-21.6c1.4,16.3,13,26.3,34.3,26.3s32.9-9.7,32.9-25.4M320.7,463.8c0-10.1-7.2-16.8-20.9-19.3l-15-2.8c-4.5-.8-6.7-1.7-6.7-4.7s3.4-4.6,8.7-4.6,10.5,3.4,11.1,9.1h21.6c-1.3-15.8-14.2-25.6-32.7-25.6s-30.1,9.6-30.1,23.3,7.9,18.5,20.3,20.8l13.9,2.5c4.9.9,7.2,2.2,7.2,5.4s-4.6,4.9-9.7,4.9c-7.8,0-13.2-3.8-13.2-9.7h-21.6c1.4,16.3,13,26.3,34.3,26.3s32.9-9.7,32.9-25.4M246.4,417.1h-22.5v70.8h22.5v-70.8h0ZM249.4,400.7c0-7.5-5.9-12.9-14.5-12.9s-14.5,5.4-14.5,12.9,5.9,12.8,14.5,12.8,14.5-5.4,14.5-12.8M215.8,463.8c0-10.1-7.2-16.8-20.9-19.3l-15-2.8c-4.5-.8-6.7-1.7-6.7-4.7s3.4-4.6,8.7-4.6,10.5,3.4,11.1,9.1h21.6c-1.3-15.8-14.2-25.6-32.7-25.6s-30.1,9.6-30.1,23.3,7.9,18.5,20.3,20.8l13.9,2.5c4.9.9,7.2,2.2,7.2,5.4s-4.6,4.9-9.7,4.9c-7.8,0-13.2-3.8-13.2-9.7h-21.6c1.4,16.3,13,26.3,34.3,26.3s32.9-9.7,32.9-25.4M100.3,466.3c0-4.9,4.1-7.4,11.7-7.4s5.5.3,8.9.9v4.5c0,5.8-4.5,9.3-12,9.3s-8.7-2.8-8.7-7.4M123.9,487.9h18.2v-43.7c0-17.9-11.4-28.4-30.9-28.4s-29.7,10.8-31,27.2h20.3c.8-6.2,4.5-9.6,10.6-9.6s9.9,3.4,9.9,9.6v3.4c-3-.5-6.6-.8-10.4-.8-20.3,0-31.4,7.5-31.4,21.3s9.9,22.2,24.6,22.2,15.3-2.5,20.3-8.2v6.8h0l-.2.2ZM37.1,449c9.3,0,13.7,3.8,13.7,9.6s-4.3,9.7-13.7,9.7h-14.6v-19.3h14.6ZM35.9,413.1c8.3,0,12.1,3.2,12.1,8s-3.8,8.3-12.1,8.3h-13.4v-16.3h13.4ZM74.2,459.5c0-10-5.4-17-15-21,7.9-4.7,12.2-11.2,12.2-19.5,0-16.4-12.9-25.5-33.5-25.5H0v94.4h39.1c22,0,35.1-10.6,35.1-28.4"/>
+</svg></span>
+    <div class="titel">Welkom!</div>
+    <div class="vandaag" id="kopdatum"></div>
+  </header>
+
+  <main>
+    <section id="klokpaneel">
+      <svg id="klok" viewBox="0 0 200 200" role="img"
+           aria-label="Analoge klok"></svg>
+      <p class="digitaal" id="digitaal">--:--</p>
+      <p class="tijdbron" id="tijdbron">Tijd wordt opgehaald…</p>
+    </section>
+
+    <section id="weer">
+      <div id="nu" class="nu-laden">Weerbericht wordt opgehaald…</div>
+      <div id="dagen"></div>
+    </section>
+  </main>
+
+  <footer>
+    <span id="plaats">Melle</span>
+    <span class="dim" id="weerbron">Weergegevens: Open-Meteo</span>
+  </footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------ *
+ * Tijd
+ *
+ * Niet de klok van het afspeelapparaat: die staat op een kiosk zonder
+ * NTP zo een kwartier verkeerd, en dan hangt er een fout uurwerk in de
+ * gang. We vragen de tijd aan de webserver via de Date-header van een
+ * HEAD-verzoek naar deze pagina zelf, en onthouden het verschil met de
+ * lokale klok. De tijdzone halen we uit Intl, dus een apparaat dat op
+ * UTC staat toont evengoed Belgische tijd.
+ * ------------------------------------------------------------------ */
+
+let verschil = 0;            // servertijd minus apparaatklok, in ms
+let gesynct = false;
+
+async function synchroniseer() {
+  try {
+    const antwoord = await fetch(location.pathname + "?t=" + Date.now(),
+                                 { method: "HEAD", cache: "no-store" });
+    const kop = antwoord.headers.get("Date");
+    if (kop) {
+      const server = new Date(kop).getTime();
+      if (!isNaN(server)) {
+        verschil = server - Date.now();
+        gesynct = true;
+        toonBron();
+        return;
+      }
+    }
+  } catch (e) { /* netwerk weg: we blijven op het laatste verschil doorlopen */ }
+  toonBron();
+}
+
+function nu() { return new Date(Date.now() + verschil); }
+
+function toonBron() {
+  const el = document.getElementById("tijdbron");
+  el.textContent = gesynct ? "Tijd van de server" : "Tijd van dit toestel";
+  el.classList.toggle("waarschuwing", !gesynct);
+}
+
+// Datumdelen in Europe/Brussels, ongeacht de instelling van het toestel.
+const DEEL = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/Brussels", hourCycle: "h23",
+  year: "numeric", month: "2-digit", day: "2-digit",
+  hour: "2-digit", minute: "2-digit", second: "2-digit",
+});
+function delen(d) {
+  const uit = {};
+  for (const p of DEEL.formatToParts(d)) uit[p.type] = p.value;
+  return uit;
+}
+
+const LANGE_DATUM = new Intl.DateTimeFormat("nl-BE", {
+  timeZone: "Europe/Brussels", weekday: "long", day: "numeric", month: "long",
+});
+const KORTE_DAG = new Intl.DateTimeFormat("nl-BE", {
+  timeZone: "Europe/Brussels", weekday: "long",
+});
+
+/* ------------------------------------------------------------------ *
+ * Analoge klok
+ * Met alle twaalf cijfers: op een lagere school leren kinderen hier de
+ * klok op lezen, en dan is een wijzerplaat met enkel streepjes zonde.
+ * ------------------------------------------------------------------ */
+
+function bouwWijzerplaat() {
+  const svg = document.getElementById("klok");
+  let d = '<circle cx="100" cy="100" r="95" class="rand"/>';
+
+  for (let i = 0; i < 60; i++) {
+    const hoek = i * 6 * Math.PI / 180;
+    const uur = i % 5 === 0;
+    const r1 = uur ? 78 : 83;
+    const r2 = 88;
+    d += '<line x1="' + (100 + r1 * Math.sin(hoek)) +
+         '" y1="' + (100 - r1 * Math.cos(hoek)) +
+         '" x2="' + (100 + r2 * Math.sin(hoek)) +
+         '" y2="' + (100 - r2 * Math.cos(hoek)) +
+         '" class="' + (uur ? "uurstreep" : "minuutstreep") + '"/>';
+  }
+
+  for (let u = 1; u <= 12; u++) {
+    const hoek = u * 30 * Math.PI / 180;
+    d += '<text x="' + (100 + 64 * Math.sin(hoek)) +
+         '" y="' + (100 - 64 * Math.cos(hoek)) +
+         '" class="cijfer">' + u + '</text>';
+  }
+
+  d += '<line id="uurwijzer" x1="100" y1="112" x2="100" y2="45" class="uur"/>' +
+       '<line id="minuutwijzer" x1="100" y1="116" x2="100" y2="28" class="minuut"/>' +
+       '<line id="secondewijzer" x1="100" y1="120" x2="100" y2="24" class="seconde"/>' +
+       '<circle cx="100" cy="100" r="5" class="spil"/>';
+
+  svg.innerHTML = d;
+}
+
+function tikTak() {
+  const d = nu();
+  const p = delen(d);
+  const u = Number(p.hour) % 12;
+  const m = Number(p.minute);
+  const s = Number(p.second);
+
+  const zet = (id, graden) =>
+    document.getElementById(id)
+      .setAttribute("transform", "rotate(" + graden + " 100 100)");
+
+  zet("uurwijzer", (u + m / 60) * 30);
+  zet("minuutwijzer", (m + s / 60) * 6);
+  zet("secondewijzer", s * 6);
+
+  document.getElementById("digitaal").textContent = p.hour + ":" + p.minute;
+  document.getElementById("kopdatum").textContent = LANGE_DATUM.format(d);
+}
+
+/* ------------------------------------------------------------------ *
+ * Weer — Open-Meteo, geen sleutel nodig
+ * ------------------------------------------------------------------ */
+
+const BREEDTE = 50.995, LENGTE = 3.805;          // Melle
+const WEER_URL = "https://api.open-meteo.com/v1/forecast" +
+  "?latitude=" + BREEDTE + "&longitude=" + LENGTE +
+  "&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m" +
+  "&daily=weather_code,temperature_2m_max,temperature_2m_min," +
+  "precipitation_probability_max,sunrise,sunset" +
+  "&timezone=Europe%2FBrussels&forecast_days=6";
+
+// WMO-codes naar Nederlandse omschrijving en pictogram.
+const WEERCODES = {
+  0:  ["Onbewolkt", "zon"],
+  1:  ["Overwegend zonnig", "zonwolk"],
+  2:  ["Half bewolkt", "zonwolk"],
+  3:  ["Bewolkt", "wolk"],
+  45: ["Mistig", "mist"],
+  48: ["Aanvriezende mist", "mist"],
+  51: ["Lichte motregen", "motregen"],
+  53: ["Motregen", "motregen"],
+  55: ["Dichte motregen", "motregen"],
+  56: ["IJzelige motregen", "ijzel"],
+  57: ["IJzelige motregen", "ijzel"],
+  61: ["Lichte regen", "regen"],
+  63: ["Regen", "regen"],
+  65: ["Zware regen", "regen"],
+  66: ["IJzel", "ijzel"],
+  67: ["Zware ijzel", "ijzel"],
+  71: ["Lichte sneeuw", "sneeuw"],
+  73: ["Sneeuw", "sneeuw"],
+  75: ["Zware sneeuw", "sneeuw"],
+  77: ["Sneeuwkorrels", "sneeuw"],
+  80: ["Enkele buien", "buien"],
+  81: ["Buien", "buien"],
+  82: ["Zware buien", "buien"],
+  85: ["Sneeuwbuien", "sneeuw"],
+  86: ["Zware sneeuwbuien", "sneeuw"],
+  95: ["Onweer", "onweer"],
+  96: ["Onweer met hagel", "onweer"],
+  99: ["Zwaar onweer met hagel", "onweer"],
+};
+
+function omschrijving(code) {
+  return (WEERCODES[code] || ["Wisselvallig", "wolk"])[0];
+}
+function pictogramNaam(code) {
+  return (WEERCODES[code] || ["Wisselvallig", "wolk"])[1];
+}
+
+const ZON = '<circle cx="32" cy="32" r="13" class="i-zon"/>' +
+  [0, 45, 90, 135, 180, 225, 270, 315].map(g => {
+    const r = g * Math.PI / 180;
+    return '<line x1="' + (32 + 19 * Math.cos(r)) + '" y1="' + (32 + 19 * Math.sin(r)) +
+           '" x2="' + (32 + 26 * Math.cos(r)) + '" y2="' + (32 + 26 * Math.sin(r)) +
+           '" class="i-straal"/>';
+  }).join("");
+const WOLK = '<path d="M18 44h26a10 10 0 0 0 0-20 14 14 0 0 0-26-4 9 9 0 0 0 0 24z" class="i-wolk"/>';
+
+function pictogram(code, klasse) {
+  const soort = pictogramNaam(code);
+  let binnen = "";
+  if (soort === "zon") binnen = ZON;
+  else if (soort === "zonwolk")
+    binnen = '<g transform="translate(6,-6) scale(0.72)">' + ZON + "</g>" +
+             '<g transform="translate(0,6)">' + WOLK + "</g>";
+  else if (soort === "mist")
+    binnen = WOLK + '<line x1="14" y1="52" x2="50" y2="52" class="i-lijn"/>' +
+             '<line x1="18" y1="58" x2="46" y2="58" class="i-lijn"/>';
+  else if (soort === "motregen" || soort === "regen" || soort === "buien") {
+    binnen = WOLK;
+    const n = soort === "motregen" ? 2 : 3;
+    for (let i = 0; i < n; i++)
+      binnen += '<line x1="' + (22 + i * 10) + '" y1="50" x2="' +
+                (18 + i * 10) + '" y2="60" class="i-druppel"/>';
+  } else if (soort === "sneeuw") {
+    binnen = WOLK;
+    for (let i = 0; i < 3; i++)
+      binnen += '<circle cx="' + (22 + i * 10) + '" cy="55" r="2.6" class="i-vlok"/>';
+  } else if (soort === "ijzel") {
+    binnen = WOLK + '<line x1="24" y1="50" x2="20" y2="60" class="i-druppel"/>' +
+             '<circle cx="38" cy="55" r="2.6" class="i-vlok"/>';
+  } else if (soort === "onweer") {
+    binnen = WOLK + '<path d="M32 48l-8 12h7l-3 10 12-14h-7l4-8z" class="i-bliksem"/>';
+  } else binnen = WOLK;
+  return '<svg class="pictogram ' + klasse + '" viewBox="0 0 64 68">' + binnen + "</svg>";
+}
+
+function graden(t) { return Math.round(t) + "\u00b0"; }
+function uurtje(iso) { return iso.slice(11, 16); }
+
+let laatsteWeer = null;
+
+async function haalWeer() {
+  try {
+    const r = await fetch(WEER_URL, { cache: "no-store" });
+    if (!r.ok) throw new Error(r.status);
+    laatsteWeer = await r.json();
+    tekenWeer(true);
+  } catch (e) {
+    if (laatsteWeer) tekenWeer(false);
+    else document.getElementById("nu").textContent =
+      "Weerbericht niet beschikbaar.";
+  }
+}
+
+function tekenWeer(vers) {
+  const w = laatsteWeer;
+  if (!w) return;
+
+  const h = w.current, d = w.daily;
+  const nuEl = document.getElementById("nu");
+  nuEl.classList.remove("nu-laden");
+  nuEl.innerHTML =
+    pictogram(h.weather_code, "groot") +
+    '<div class="nugetal">' +
+      '<p class="temp">' + graden(h.temperature_2m) + '</p>' +
+      '<p class="omschrijving">' + omschrijving(h.weather_code) + '</p>' +
+      '<p class="bijzaken">Voelt als ' + graden(h.apparent_temperature) +
+        ' \u00b7 wind ' + Math.round(h.wind_speed_10m) + ' km/u' +
+        ' \u00b7 ' + (d.precipitation_probability_max[0] ?? 0) + '% kans op regen</p>' +
+      '<p class="bijzaken">Zon op ' + uurtje(d.sunrise[0]) +
+        ' \u00b7 onder ' + uurtje(d.sunset[0]) + '</p>' +
+    '</div>';
+
+  let rij = "";
+  for (let i = 1; i < d.time.length; i++) {
+    const dag = new Date(d.time[i] + "T12:00:00");
+    const naam = i === 1 ? "morgen" : KORTE_DAG.format(dag);
+    rij += '<article>' +
+      '<p class="dagnaam">' + naam + '</p>' +
+      '<div class="dagicoon">' + pictogram(d.weather_code[i], "klein") + '</div>' +
+      '<p class="dagtemp"><span class="max">' + graden(d.temperature_2m_max[i]) +
+        '</span><span class="min">' + graden(d.temperature_2m_min[i]) + '</span></p>' +
+      '<p class="regen">' + (d.precipitation_probability_max[i] ?? 0) + '%</p>' +
+      '</article>';
+  }
+  document.getElementById("dagen").innerHTML = rij;
+
+  document.getElementById("weerbron").textContent = vers
+    ? "Weergegevens: Open-Meteo"
+    : "Weergegevens: Open-Meteo (verbinding weg, laatste bericht)";
+}
+
+/* ------------------------------------------------------------------ *
+ * Opstarten
+ * ------------------------------------------------------------------ */
+
+// Een scherm dat maandenlang hetzelfde toont brandt in. Elke vijf minuten
+// een paar pixels opschuiven is genoeg om dat te voorkomen.
+const SCHUIF = [[0,0],[2,1],[3,0],[2,-1],[0,-2],[-2,-1],[-3,0],[-2,1]];
+let schuifIndex = 0;
+function pixelShift() {
+  const [x, y] = SCHUIF[schuifIndex % SCHUIF.length];
+  document.getElementById("scherm").style.transform =
+    "translate(" + x + "px," + y + "px)";
+  schuifIndex++;
+}
+
+bouwWijzerplaat();
+tikTak();
+pixelShift();
+synchroniseer().then(tikTak);
+haalWeer();
+
+setInterval(tikTak, 1000);
+setInterval(synchroniseer, 10 * 60 * 1000);   // klok bijregelen
+setInterval(haalWeer, 15 * 60 * 1000);        // nieuw weerbericht
+setInterval(pixelShift, 5 * 60 * 1000);
+setTimeout(() => location.reload(), 3 * 60 * 60 * 1000);
+</script>
+
+</body>
+</html>
