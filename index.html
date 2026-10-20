@@ -180,6 +180,7 @@ const WEER_URL = "https://api.open-meteo.com/v1/forecast" +
   "&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m" +
   "&daily=weather_code,temperature_2m_max,temperature_2m_min," +
   "precipitation_probability_max,sunrise,sunset" +
+  "&hourly=weather_code" +
   "&timezone=Europe%2FBrussels&forecast_days=6";
 
 // WMO-codes naar Nederlandse omschrijving en pictogram.
@@ -259,6 +260,39 @@ function pictogram(code, klasse) {
   return '<svg class="pictogram ' + klasse + '" viewBox="0 0 64 68">' + binnen + "</svg>";
 }
 
+/* Het daggetal weather_code van Open-Meteo is "de zwaarste toestand van de
+ * dag": één bui om 3 uur 's nachts of één onweersuur maakt van een zonnige
+ * dag een buien- of onweersdag. Daarom kiezen we zelf een pictogram uit de
+ * uurwaarden tijdens de schooldag (8 tot 17 uur): de soort weer die de
+ * meeste uren voorkomt. Neerslag wint van droog weer zodra het minstens
+ * DREMPEL uren valt, zodat een natte middag niet wegvalt tegen een droge
+ * ochtend. Binnen de gekozen soort tonen we de zwaarste code. */
+const VAN_UUR = 8, TOT_UUR = 17, DREMPEL = 3;
+const DROOG = new Set(["zon", "zonwolk", "wolk", "mist"]);
+
+function dagCode(w, dag) {
+  const uren = w.hourly;
+  if (!uren || !uren.time) return w.daily.weather_code[dag];
+  const tel = {}, zwaarste = {};
+  for (let i = 0; i < uren.time.length; i++) {
+    const t = uren.time[i];
+    if (t.slice(0, 10) !== w.daily.time[dag]) continue;
+    const uur = Number(t.slice(11, 13));
+    if (uur < VAN_UUR || uur >= TOT_UUR) continue;
+    const code = uren.weather_code[i];
+    if (code == null) continue;
+    const soort = pictogramNaam(code);
+    tel[soort] = (tel[soort] || 0) + 1;
+    zwaarste[soort] = Math.max(zwaarste[soort] ?? -1, code);
+  }
+  const soorten = Object.keys(tel);
+  if (!soorten.length) return w.daily.weather_code[dag];
+  const nat = soorten.filter(s => !DROOG.has(s) && tel[s] >= DREMPEL);
+  const kandidaten = nat.length ? nat : soorten;
+  kandidaten.sort((a, b) => tel[b] - tel[a] || zwaarste[b] - zwaarste[a]);
+  return zwaarste[kandidaten[0]];
+}
+
 function graden(t) { return Math.round(t) + "\u00b0"; }
 function uurtje(iso) { return iso.slice(11, 16); }
 
@@ -302,7 +336,7 @@ function tekenWeer(vers) {
     const naam = i === 1 ? "morgen" : KORTE_DAG.format(dag);
     rij += '<article>' +
       '<p class="dagnaam">' + naam + '</p>' +
-      '<div class="dagicoon">' + pictogram(d.weather_code[i], "klein") + '</div>' +
+      '<div class="dagicoon">' + pictogram(dagCode(w, i), "klein") + '</div>' +
       '<p class="dagtemp"><span class="max">' + graden(d.temperature_2m_max[i]) +
         '</span><span class="min">' + graden(d.temperature_2m_min[i]) + '</span></p>' +
       '<p class="regen">' + (d.precipitation_probability_max[i] ?? 0) + '%</p>' +
