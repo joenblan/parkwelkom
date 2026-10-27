@@ -34,6 +34,8 @@
     <div class="vandaag" id="kopdatum"></div>
   </header>
 
+  <p id="bericht" hidden></p>
+
   <main>
     <section id="klokpaneel">
       <svg id="klok" viewBox="0 0 200 200" role="img"
@@ -91,7 +93,7 @@ function nu() { return new Date(Date.now() + verschil); }
 
 function toonBron() {
   const el = document.getElementById("tijdbron");
-  el.textContent = gesynct ? "Lokale tijd" : "Tijd van dit toestel";
+  el.textContent = gesynct ? "Tijd van de server" : "Tijd van dit toestel";
   el.classList.toggle("waarschuwing", !gesynct);
 }
 
@@ -171,6 +173,63 @@ function tikTak() {
 }
 
 /* ------------------------------------------------------------------ *
+ * Mededeling van de school
+ *
+ * Staat in bericht.json naast deze pagina. Het secretariaat past dat
+ * bestand aan via github.com in de browser; het bord haalt het elke vijf
+ * minuten opnieuw op, dus een wijziging staat er binnen enkele minuten.
+ * Geen build, geen workflow, niets om te herstarten.
+ * ------------------------------------------------------------------ */
+
+const BERICHT_URL = "bericht.json";
+let mededelingen = [];
+let berichtIndex = 0;
+
+function vandaagISO() {
+  const p = delen(nu());
+  return p.year + "-" + p.month + "-" + p.day;
+}
+
+function geldigVandaag(m, dag) {
+  if (!m || typeof m.tekst !== "string" || !m.tekst.trim()) return false;
+  if (m.vanaf && dag < m.vanaf) return false;   // ISO-datums vergelijken
+  if (m.tot && dag > m.tot) return false;       // prima als tekst
+  return true;
+}
+
+async function haalBerichten() {
+  try {
+    const r = await fetch(BERICHT_URL + "?t=" + Date.now(), { cache: "no-store" });
+    if (!r.ok) throw new Error(r.status);
+    const data = await r.json();
+    mededelingen = Array.isArray(data.mededelingen) ? data.mededelingen : [];
+  } catch (e) {
+    // Netwerk weg of json stuk: we houden de vorige boodschap op het scherm
+    // in plaats van ze te laten verdwijnen.
+  }
+  toonBericht();
+}
+
+function toonBericht() {
+  const band = document.getElementById("bericht");
+  const actief = mededelingen.filter(m => geldigVandaag(m, vandaagISO()));
+  if (actief.length === 0) {
+    band.hidden = true;
+    return;
+  }
+  if (berichtIndex >= actief.length) berichtIndex = 0;
+  const m = actief[berichtIndex];
+  band.hidden = false;
+  band.className = m.toon === "belangrijk" ? "belangrijk" : "";
+  band.textContent = m.tekst;              // textContent, dus geen html uit het bestand
+}
+
+function volgendBericht() {
+  berichtIndex++;
+  toonBericht();
+}
+
+/* ------------------------------------------------------------------ *
  * Weer — Open-Meteo, geen sleutel nodig
  * ------------------------------------------------------------------ */
 
@@ -180,7 +239,6 @@ const WEER_URL = "https://api.open-meteo.com/v1/forecast" +
   "&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m" +
   "&daily=weather_code,temperature_2m_max,temperature_2m_min," +
   "precipitation_probability_max,sunrise,sunset" +
-  "&hourly=weather_code" +
   "&timezone=Europe%2FBrussels&forecast_days=6";
 
 // WMO-codes naar Nederlandse omschrijving en pictogram.
@@ -260,39 +318,6 @@ function pictogram(code, klasse) {
   return '<svg class="pictogram ' + klasse + '" viewBox="0 0 64 68">' + binnen + "</svg>";
 }
 
-/* Het daggetal weather_code van Open-Meteo is "de zwaarste toestand van de
- * dag": één bui om 3 uur 's nachts of één onweersuur maakt van een zonnige
- * dag een buien- of onweersdag. Daarom kiezen we zelf een pictogram uit de
- * uurwaarden tijdens de schooldag (8 tot 17 uur): de soort weer die de
- * meeste uren voorkomt. Neerslag wint van droog weer zodra het minstens
- * DREMPEL uren valt, zodat een natte middag niet wegvalt tegen een droge
- * ochtend. Binnen de gekozen soort tonen we de zwaarste code. */
-const VAN_UUR = 8, TOT_UUR = 17, DREMPEL = 3;
-const DROOG = new Set(["zon", "zonwolk", "wolk", "mist"]);
-
-function dagCode(w, dag) {
-  const uren = w.hourly;
-  if (!uren || !uren.time) return w.daily.weather_code[dag];
-  const tel = {}, zwaarste = {};
-  for (let i = 0; i < uren.time.length; i++) {
-    const t = uren.time[i];
-    if (t.slice(0, 10) !== w.daily.time[dag]) continue;
-    const uur = Number(t.slice(11, 13));
-    if (uur < VAN_UUR || uur >= TOT_UUR) continue;
-    const code = uren.weather_code[i];
-    if (code == null) continue;
-    const soort = pictogramNaam(code);
-    tel[soort] = (tel[soort] || 0) + 1;
-    zwaarste[soort] = Math.max(zwaarste[soort] ?? -1, code);
-  }
-  const soorten = Object.keys(tel);
-  if (!soorten.length) return w.daily.weather_code[dag];
-  const nat = soorten.filter(s => !DROOG.has(s) && tel[s] >= DREMPEL);
-  const kandidaten = nat.length ? nat : soorten;
-  kandidaten.sort((a, b) => tel[b] - tel[a] || zwaarste[b] - zwaarste[a]);
-  return zwaarste[kandidaten[0]];
-}
-
 function graden(t) { return Math.round(t) + "\u00b0"; }
 function uurtje(iso) { return iso.slice(11, 16); }
 
@@ -325,9 +350,8 @@ function tekenWeer(vers) {
       '<p class="omschrijving">' + omschrijving(h.weather_code) + '</p>' +
       '<p class="bijzaken">Voelt als ' + graden(h.apparent_temperature) +
         ' \u00b7 wind ' + Math.round(h.wind_speed_10m) + ' km/u' +
-        ' \u00b7 ' + (d.precipitation_probability_max[0] ?? 0) + '% kans op regen</p>' +
-      '<p class="bijzaken">Zon op ' + uurtje(d.sunrise[0]) +
-        ' \u00b7 onder ' + uurtje(d.sunset[0]) + '</p>' +
+        ' \u00b7 ' + (d.precipitation_probability_max[0] ?? 0) + '% regen' +
+        ' \u00b7 zon onder ' + uurtje(d.sunset[0]) + '</p>' +
     '</div>';
 
   let rij = "";
@@ -336,7 +360,7 @@ function tekenWeer(vers) {
     const naam = i === 1 ? "morgen" : KORTE_DAG.format(dag);
     rij += '<article>' +
       '<p class="dagnaam">' + naam + '</p>' +
-      '<div class="dagicoon">' + pictogram(dagCode(w, i), "klein") + '</div>' +
+      '<div class="dagicoon">' + pictogram(d.weather_code[i], "klein") + '</div>' +
       '<p class="dagtemp"><span class="max">' + graden(d.temperature_2m_max[i]) +
         '</span><span class="min">' + graden(d.temperature_2m_min[i]) + '</span></p>' +
       '<p class="regen">' + (d.precipitation_probability_max[i] ?? 0) + '%</p>' +
@@ -369,10 +393,13 @@ tikTak();
 pixelShift();
 synchroniseer().then(tikTak);
 haalWeer();
+haalBerichten();
 
 setInterval(tikTak, 1000);
 setInterval(synchroniseer, 10 * 60 * 1000);   // klok bijregelen
 setInterval(haalWeer, 15 * 60 * 1000);        // nieuw weerbericht
+setInterval(haalBerichten, 5 * 60 * 1000);   // mededeling opnieuw ophalen
+setInterval(volgendBericht, 15 * 1000);      // wisselen als er meerdere zijn
 setInterval(pixelShift, 5 * 60 * 1000);
 setTimeout(() => location.reload(), 3 * 60 * 60 * 1000);
 </script>
