@@ -1,4 +1,10 @@
 {
   "_uitleg": "Dit bestand wordt beheerd via beheer.html. Je mag het ook met de hand aanpassen, maar let dan op de komma's.",
-  "mededelingen": []
+  "mededelingen": [
+    {
+      "tekst": "Prettige vakantie!",
+      "vanaf": "2026-10-30",
+      "tot": "2026-10-31"
+    }
+  ]
 }
