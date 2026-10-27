@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mededelingen beheren — Basisschool Het Park</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link rel="stylesheet"
+      href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap">
+<style>
+/* Beheerpagina: geen schermbord maar een gewoon formulier, dus licht en
+   rustig in plaats van de donkere signage-opmaak. */
+:root {
+  --inkt: #15241f;
+  --gedempt: #5d7470;
+  --papier: #f4f8f4;
+  --vlak: #ffffff;
+  --rand: #d4e2dd;
+  --teal: #009886;
+  --teal-diep: #00655a;
+  --limoen: #a1d683;
+  --oranje: #8a5a12;
+  --rood: #a6342a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--papier);
+  color: var(--inkt);
+  font: 16px/1.5 "General Sans", "GeneralSans", Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  padding: 2rem 1.25rem 5rem;
+}
+.blad { max-width: 46rem; margin: 0 auto; }
+
+h1 { font-size: 1.7rem; letter-spacing: -0.015em; margin-bottom: .3rem; }
+.onder { color: var(--gedempt); margin-bottom: 2rem; }
+
+.kaart {
+  background: var(--vlak);
+  border: 1px solid var(--rand);
+  border-radius: .7rem;
+  padding: 1.4rem;
+  margin-bottom: 1rem;
+}
+.kaart.belangrijk { border-left: .4rem solid var(--oranje); }
+.kaart.gewoon { border-left: .4rem solid var(--teal); }
+
+label { display: block; font-size: .85rem; font-weight: 600; color: var(--gedempt); margin-bottom: .3rem; }
+textarea, input[type="text"], input[type="date"], input[type="password"] {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: var(--vlak);
+  border: 1px solid var(--rand);
+  border-radius: .4rem;
+  padding: .6rem .7rem;
+}
+textarea { resize: vertical; min-height: 4.5rem; }
+input:focus, textarea:focus { outline: 2px solid var(--teal); outline-offset: 1px; }
+
+.velden { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+@media (max-width: 34rem) { .velden { grid-template-columns: 1fr; } }
+
+.vinkje { display: flex; align-items: center; gap: .5rem; margin-top: 1rem; }
+.vinkje label { margin: 0; font-weight: 500; color: var(--inkt); font-size: 1rem; }
+
+button {
+  font: inherit;
+  font-weight: 600;
+  border: 1px solid transparent;
+  border-radius: .4rem;
+  padding: .6rem 1.1rem;
+  cursor: pointer;
+  background: var(--teal-diep);
+  color: #fff;
+}
+button:hover { background: var(--teal); }
+button.stil { background: transparent; color: var(--teal-diep); border-color: var(--rand); }
+button.stil:hover { background: #eaf3f0; }
+button.weg { background: transparent; color: var(--rood); border-color: transparent; padding: .4rem .5rem; }
+button.weg:hover { background: #fbeceb; }
+button[disabled] { opacity: .5; cursor: not-allowed; }
+
+.balk { display: flex; gap: .7rem; align-items: center; flex-wrap: wrap; margin-top: 1.5rem; }
+.rechts { margin-left: auto; }
+
+.kop { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.volgnr { font-size: .85rem; font-weight: 600; color: var(--gedempt); }
+
+.melding { padding: .8rem 1rem; border-radius: .4rem; margin-bottom: 1rem; display: none; }
+.melding.toon { display: block; }
+.melding.goed { background: #e7f5ee; color: #0f5233; }
+.melding.fout { background: #fbeceb; color: var(--rood); }
+.melding.bezig { background: #eef3f7; color: var(--gedempt); }
+
+/* Voorbeeld van hoe de balk op het bord komt */
+.voorbeeld {
+  background: #004d44;
+  border-radius: .5rem;
+  padding: 1rem 1.1rem;
+  margin-top: 1rem;
+  border-left: .4rem solid var(--limoen);
+  color: #fff;
+  font-size: 1.05rem;
+}
+.voorbeeld.belangrijk { border-left-color: #edb75a; color: #edb75a; }
+.voorbeeld .mini { display: block; font-size: .75rem; color: #9ecfc7; margin-bottom: .3rem; font-weight: 600; }
+
+.leeg { color: var(--gedempt); font-style: italic; padding: 1rem 0; }
+.hulp { font-size: .85rem; color: var(--gedempt); margin-top: .5rem; }
+.hulp a { color: var(--teal-diep); }
+#slot { max-width: 26rem; }
+</style>
+</head>
+<body>
+
+<div class="blad">
+
+  <h1>Mededelingen</h1>
+  <p class="onder">Wat hier staat, verschijnt op het scherm in de inkomhal.</p>
+
+  <div id="melding" class="melding"></div>
+
+  <!-- Aanmelden -->
+  <section id="slot" class="kaart">
+    <label for="code">Toegangscode</label>
+    <input type="password" id="code" autocomplete="current-password"
+           placeholder="github_pat_...">
+    <div class="balk">
+      <button id="open">Openen</button>
+    </div>
+    <p class="hulp">Je krijgt deze code van de ICT-coördinator. Hij blijft in
+      deze browser bewaard, dus je hoeft hem maar één keer in te vullen.</p>
+  </section>
+
+  <!-- Beheer -->
+  <section id="werkblad" hidden>
+    <div id="lijst"></div>
+
+    <div class="balk">
+      <button class="stil" id="nieuw">Mededeling toevoegen</button>
+      <button id="bewaar" class="rechts">Opslaan en tonen</button>
+    </div>
+
+    <div class="balk">
+      <button class="stil" id="afmelden">Afmelden op dit toestel</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ------------------------------------------------------------------ *
+ * Welke repository en welk bestand
+ * ------------------------------------------------------------------ */
+const EIGENAAR = "joenblan";        // <-- aanpassen als de repo elders staat
+const REPO     = "parkwelkom";      // <-- naam van de repository
+const PAD      = "bericht.json";
+const TAK      = "main";
+
+const API = "https://api.github.com/repos/" + EIGENAAR + "/" + REPO +
+            "/contents/" + PAD;
+const SLEUTEL = "bord-token";
+
+let token = "";
+let sha = null;            // versie van het bestand dat we gelezen hebben
+let mededelingen = [];
+
+/* ------------------------------------------------------------------ *
+ * Hulpjes
+ * ------------------------------------------------------------------ */
+const $ = id => document.getElementById(id);
+
+function meld(tekst, soort) {
+  const el = $("melding");
+  el.textContent = tekst;
+  el.className = "melding toon " + (soort || "bezig");
+  if (soort === "goed") setTimeout(() => el.classList.remove("toon"), 4000);
+}
+function stilte() { $("melding").classList.remove("toon"); }
+
+// btoa() struikelt over é en °, dus eerst naar UTF-8-bytes.
+function naarBase64(tekst) {
+  const bytes = new TextEncoder().encode(tekst);
+  let binair = "";
+  bytes.forEach(b => { binair += String.fromCharCode(b); });
+  return btoa(binair);
+}
+function uitBase64(b64) {
+  const binair = atob(b64.replace(/\s/g, ""));
+  const bytes = Uint8Array.from(binair, c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
+async function api(opties) {
+  return fetch(API + "?ref=" + TAK + "&t=" + Date.now(), Object.assign({
+    headers: {
+      "Authorization": "Bearer " + token,
+      "Accept": "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+    cache: "no-store",
+  }, opties || {}));
+}
+
+/* ------------------------------------------------------------------ *
+ * Laden
+ * ------------------------------------------------------------------ */
+async function laden() {
+  meld("Bezig met openen…");
+  let r;
+  try {
+    r = await api();
+  } catch (e) {
+    meld("Geen verbinding met GitHub. Staat het internet aan?", "fout");
+    return false;
+  }
+
+  if (r.status === 401) {
+    meld("Die code klopt niet of is vervallen. Vraag een nieuwe aan de " +
+         "ICT-coördinator.", "fout");
+    return false;
+  }
+  if (r.status === 403) {
+    meld("Deze code heeft geen toestemming om dit bestand te wijzigen.", "fout");
+    return false;
+  }
+  if (r.status === 404) {
+    // Bestand bestaat nog niet: we beginnen met een lege lijst.
+    sha = null;
+    mededelingen = [];
+    stilte();
+    return true;
+  }
+  if (!r.ok) {
+    meld("GitHub gaf een fout (" + r.status + "). Probeer het straks opnieuw.",
+         "fout");
+    return false;
+  }
+
+  const data = await r.json();
+  sha = data.sha;
+  try {
+    const inhoud = JSON.parse(uitBase64(data.content));
+    mededelingen = Array.isArray(inhoud.mededelingen) ? inhoud.mededelingen : [];
+  } catch (e) {
+    meld("Het bestand op GitHub is beschadigd. Neem contact op met de " +
+         "ICT-coördinator voor je iets opslaat.", "fout");
+    mededelingen = [];
+  }
+  return true;
+}
+
+/* ------------------------------------------------------------------ *
+ * Tonen
+ * ------------------------------------------------------------------ */
+function tekenLijst() {
+  const lijst = $("lijst");
+  lijst.innerHTML = "";
+
+  if (mededelingen.length === 0) {
+    lijst.innerHTML = '<p class="leeg">Er staat nu niets op het scherm. ' +
+      'Voeg een mededeling toe, of laat het zo.</p>';
+    return;
+  }
+
+  mededelingen.forEach((m, i) => {
+    const kaart = document.createElement("section");
+    kaart.className = "kaart " + (m.toon === "belangrijk" ? "belangrijk" : "gewoon");
+    kaart.innerHTML =
+      '<div class="kop"><span class="volgnr">Mededeling ' + (i + 1) + '</span>' +
+        '<button class="weg" data-weg="' + i + '">Verwijderen</button></div>' +
+      '<div style="margin-top:.8rem">' +
+        '<label for="t' + i + '">Tekst</label>' +
+        '<textarea id="t' + i + '" data-veld="tekst" data-i="' + i + '"></textarea>' +
+      '</div>' +
+      '<div class="velden">' +
+        '<div><label for="v' + i + '">Vanaf (mag leeg)</label>' +
+          '<input type="date" id="v' + i + '" data-veld="vanaf" data-i="' + i + '"></div>' +
+        '<div><label for="w' + i + '">Tot en met (mag leeg)</label>' +
+          '<input type="date" id="w' + i + '" data-veld="tot" data-i="' + i + '"></div>' +
+      '</div>' +
+      '<div class="vinkje">' +
+        '<input type="checkbox" id="b' + i + '" data-veld="belangrijk" data-i="' + i + '">' +
+        '<label for="b' + i + '">Extra opvallend tonen (oranje)</label>' +
+      '</div>' +
+      '<div class="voorbeeld' + (m.toon === "belangrijk" ? " belangrijk" : "") +
+        '" data-voorbeeld="' + i + '"><span class="mini">Zo komt het op het scherm</span>' +
+        '<span data-voorbeeldtekst="' + i + '"></span></div>';
+    lijst.appendChild(kaart);
+
+    // waarden invullen zonder innerHTML, zodat tekst tekst blijft
+    kaart.querySelector('[data-veld="tekst"]').value = m.tekst || "";
+    kaart.querySelector('[data-veld="vanaf"]').value = m.vanaf || "";
+    kaart.querySelector('[data-veld="tot"]').value = m.tot || "";
+    kaart.querySelector('[data-veld="belangrijk"]').checked = m.toon === "belangrijk";
+    kaart.querySelector('[data-voorbeeldtekst]').textContent =
+      m.tekst || "(nog geen tekst)";
+  });
+}
+
+function veldGewijzigd(e) {
+  const veld = e.target.dataset.veld;
+  if (!veld) return;
+  const i = Number(e.target.dataset.i);
+  const m = mededelingen[i];
+  if (!m) return;
+
+  if (veld === "belangrijk") {
+    if (e.target.checked) m.toon = "belangrijk"; else delete m.toon;
+    tekenLijst();
+    return;
+  }
+  const waarde = e.target.value.trim();
+  if (waarde) m[veld] = waarde; else delete m[veld];
+
+  if (veld === "tekst") {
+    const voorbeeld = document.querySelector('[data-voorbeeldtekst="' + i + '"]');
+    if (voorbeeld) voorbeeld.textContent = waarde || "(nog geen tekst)";
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Opslaan
+ * ------------------------------------------------------------------ */
+function opschonen() {
+  return mededelingen
+    .filter(m => (m.tekst || "").trim())
+    .map(m => {
+      const uit = { tekst: m.tekst.trim() };
+      if (m.vanaf) uit.vanaf = m.vanaf;
+      if (m.tot) uit.tot = m.tot;
+      if (m.toon === "belangrijk") uit.toon = "belangrijk";
+      return uit;
+    });
+}
+
+async function bewaren(tweedePoging) {
+  const schoon = opschonen();
+  const inhoud = JSON.stringify({
+    _uitleg: "Dit bestand wordt beheerd via beheer.html. Je mag het ook met " +
+             "de hand aanpassen, maar let dan op de komma's.",
+    mededelingen: schoon,
+  }, null, 2) + "\n";
+
+  $("bewaar").disabled = true;
+  meld("Bezig met opslaan…");
+
+  let r;
+  try {
+    r = await api({
+      method: "PUT",
+      body: JSON.stringify({
+        message: "Mededeling bijgewerkt via beheerpagina",
+        content: naarBase64(inhoud),
+        branch: TAK,
+        sha: sha || undefined,
+      }),
+    });
+  } catch (e) {
+    $("bewaar").disabled = false;
+    meld("Geen verbinding met GitHub. Niets opgeslagen.", "fout");
+    return;
+  }
+
+  // Iemand anders heeft het bestand ondertussen gewijzigd: opnieuw ophalen
+  // en één keer opnieuw proberen, in plaats van hun wijziging te overschrijven.
+  if ((r.status === 409 || r.status === 422) && !tweedePoging) {
+    await laden();
+    tekenLijst();
+    return bewaren(true);
+  }
+
+  $("bewaar").disabled = false;
+
+  if (r.status === 401 || r.status === 403) {
+    meld("Deze code mag niets opslaan. Vraag een nieuwe aan de " +
+         "ICT-coördinator.", "fout");
+    return;
+  }
+  if (!r.ok) {
+    meld("Opslaan mislukt (" + r.status + "). Er is niets gewijzigd.", "fout");
+    return;
+  }
+
+  const data = await r.json();
+  sha = data.content && data.content.sha;
+  mededelingen = schoon;
+  tekenLijst();
+  meld("Opgeslagen. Het scherm toont dit binnen vijf minuten.", "goed");
+}
+
+/* ------------------------------------------------------------------ *
+ * Opstarten
+ * ------------------------------------------------------------------ */
+async function openen(ingetiktToken) {
+  token = ingetiktToken;
+  if (!await laden()) return false;
+  try { localStorage.setItem(SLEUTEL, token); } catch (e) { /* prive-venster */ }
+  $("slot").hidden = true;
+  $("werkblad").hidden = false;
+  tekenLijst();
+  return true;
+}
+
+$("open").addEventListener("click", () => {
+  const code = $("code").value.trim();
+  if (!code) { meld("Vul eerst de toegangscode in.", "fout"); return; }
+  openen(code);
+});
+$("code").addEventListener("keydown", e => {
+  if (e.key === "Enter") $("open").click();
+});
+
+$("nieuw").addEventListener("click", () => {
+  mededelingen.push({ tekst: "" });
+  tekenLijst();
+  const laatste = document.querySelector("#lijst .kaart:last-child textarea");
+  if (laatste) laatste.focus();
+});
+
+$("lijst").addEventListener("input", veldGewijzigd);
+$("lijst").addEventListener("change", veldGewijzigd);
+$("lijst").addEventListener("click", e => {
+  const weg = e.target.dataset.weg;
+  if (weg === undefined) return;
+  mededelingen.splice(Number(weg), 1);
+  tekenLijst();
+});
+
+$("bewaar").addEventListener("click", () => bewaren(false));
+
+$("afmelden").addEventListener("click", () => {
+  try { localStorage.removeItem(SLEUTEL); } catch (e) { /* niets */ }
+  location.reload();
+});
+
+// Al eerder ingelogd op dit toestel?
+(function () {
+  let bewaard = null;
+  try { bewaard = localStorage.getItem(SLEUTEL); } catch (e) { /* niets */ }
+  if (bewaard) openen(bewaard);
+})();
+</script>
+
+</body>
+</html>

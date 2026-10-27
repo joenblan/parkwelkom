@@ -35,7 +35,7 @@ html, body {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-rows: 12vh 1fr 6vh;
+  grid-template-rows: 12vh auto minmax(0, 1fr) 6vh;
   padding: 0 4vh;
   will-change: transform;
 }
@@ -88,16 +88,39 @@ header .vandaag {
 
 /* De klok is het hoofdonderwerp van dit bord en krijgt dus de ruimte; het
    weerbericht staat er in een smallere kolom naast. */
+/* De mededelingenbalk van de school. Staat er niets, dan is de balk
+   verborgen en valt de rij vanzelf weg uit het raster. */
+#bericht {
+  margin-top: 2.5vh;
+  padding: 1.8vh 3vh;
+  background: var(--merk-paneel);
+  border-left: 1vh solid var(--accent);
+  font-size: 3.2vh;
+  font-weight: 500;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+#bericht.belangrijk {
+  border-left-color: var(--waarschuwing);
+  color: var(--waarschuwing);
+}
+#bericht[hidden] { display: none; }
+
 main {
   display: grid;
   grid-template-columns: 54% minmax(0, 1fr);
+  /* Ook de rij vastzetten, anders groeit die mee met de klok en loopt de
+     inhoud onderaan het scherm uit beeld zodra de balk erboven staat. */
+  grid-template-rows: minmax(0, 1fr);
   gap: 5vh;
-  padding: 4vh 0;
+  padding: 3vh 0;
   min-height: 0;
 }
 
 /* ---- klok ---- */
 #klokpaneel {
+  overflow: hidden;
+  min-height: 0;
   background: var(--merk-paneel);
   border-left: 1vh solid var(--accent);
   padding: 3vh;
@@ -107,10 +130,15 @@ main {
   justify-content: center;
   min-width: 0;
 }
+/* De wijzerplaat krijgt 53vh als er plaats is, maar mag krimpen wanneer de
+   mededelingenbalk erboven staat of over twee regels loopt. Zo hoeft de
+   hoogte nergens met de hand bijgesteld te worden. */
 #klok {
   width: auto;
   height: 53vh;
   max-width: 100%;
+  min-height: 0;
+  flex-shrink: 1;
   display: block;
 }
 #klok .rand { fill: none; stroke: var(--merk-teal); stroke-width: 2.5; }
@@ -143,7 +171,7 @@ main {
 #weer {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 3vh;
+  gap: 1.5vh;
   min-width: 0;
 }
 
@@ -151,20 +179,20 @@ main {
   display: flex;
   align-items: center;
   gap: 3vh;
-  padding-bottom: 2.5vh;
+  padding-bottom: 1.5vh;
   border-bottom: 0.2vh solid var(--lijn);
   min-width: 0;
 }
 #nu.nu-laden { display: block; font-size: 3vh; color: var(--gedempt); }
 .nugetal { min-width: 0; }
 .temp {
-  font-size: 8.5vh;
+  font-size: 7vh;
   line-height: 1;
   font-weight: 700;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
 }
-.omschrijving { font-size: 3.2vh; font-weight: 500; margin-top: 0.5vh; }
+.omschrijving { font-size: 2.9vh; font-weight: 500; margin-top: 0.5vh; }
 .bijzaken { font-size: 2.1vh; color: var(--gedempt); margin-top: 0.9vh; }
 
 /* Eén raster voor alle dagen samen: de dagnaamkolom is zo breed als de
@@ -180,20 +208,20 @@ main {
 /* Geen column-gap maar padding, anders valt de scheidingslijn tussen de
    kolommen in stukken uiteen. */
 #dagen article > * {
-  padding: 1.4vh 2.5vh 1.4vh 0;
+  padding: 1vh 2.5vh 1vh 0;
   border-bottom: 0.2vh solid var(--lijn);
   display: flex;
   align-items: center;
 }
 #dagen .dagnaam {
-  font-size: 2.8vh;
+  font-size: 2.5vh;
   font-weight: 600;
   color: var(--accent-zacht);
   white-space: nowrap;
 }
 #dagen .dagicoon { justify-content: center; }
 #dagen .dagtemp { gap: 1.2vh; font-variant-numeric: tabular-nums; }
-#dagen .max { font-size: 3.6vh; font-weight: 600; }
+#dagen .max { font-size: 3.2vh; font-weight: 600; }
 #dagen .min { font-size: 2.6vh; color: var(--gedempt); }
 #dagen .regen {
   font-size: 2.4vh;
@@ -204,8 +232,8 @@ main {
 
 /* ---- weerpictogrammen ---- */
 .pictogram { display: block; }
-.pictogram.groot { width: 14vh; height: 14vh; flex: none; }
-.pictogram.klein { width: 7.5vh; height: 7.5vh; }
+.pictogram.groot { width: 12vh; height: 12vh; flex: none; }
+.pictogram.klein { width: 6vh; height: 6vh; }
 .i-zon { fill: var(--accent); }
 .i-straal { stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round; }
 .i-wolk { fill: #d8e8ea; }

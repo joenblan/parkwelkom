@@ -1,0 +1,15 @@
+{
+  "_uitleg": "Elke regel in 'mededelingen' is een boodschap voor het bord. Laat 'vanaf' of 'tot' weg als het niet uitmaakt; na 'tot' verdwijnt de boodschap vanzelf. Zet 'toon' op 'belangrijk' voor een oranje balk. Staan er meerdere, dan wisselen ze om de 15 seconden. Een lege lijst betekent: geen balk tonen.",
+  "mededelingen": [
+    {
+      "tekst": "Woensdag geen turnles.",
+      "tot": "2026-10-28"
+    },
+    {
+      "tekst": "Opgelet: werken aan de parking vanaf maandag.",
+      "vanaf": "2026-10-29",
+      "tot": "2026-11-06",
+      "toon": "belangrijk"
+    }
+  ]
+}
